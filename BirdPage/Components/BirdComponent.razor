@@ -1,0 +1,18 @@
+@using BirdPage.Infrastructure
+@inject IDialogService DialogService
+@rendermode InteractiveServer
+
+
+<MudDialogProvider/>
+
+<MudCard>
+    <MudCardContent>
+        <MudImage Src=@Bird.ImgSmall Fluid="true" ObjectPosition="ObjectPosition.Center" ObjectFit="ObjectFit.ScaleDown" Class="rounded-lg"/>
+        <MudText Align="Align.Center">@Bird.Translate(Language.BirdNameLanguage)</MudText>
+    </MudCardContent>
+</MudCard>
+
+@code {
+    [EditorRequired] [Parameter] public Bird Bird { get; set; } = null!;
+    [EditorRequired] [Parameter] public LanguageTuple Language { get; set; }
+}

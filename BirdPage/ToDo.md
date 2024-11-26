@@ -1,0 +1,10 @@
+- [ ] upload + Tags? auto downscale + watermark
+- [ ] filters
+- on all cards: contact me
+- on all cards: same birds search
+- chips for birds
+- add eichelhäher und andere?
+- add to git
+- change icon
+- fix selection text / display
+- translate select all text 3x

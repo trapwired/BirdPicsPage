@@ -1,0 +1,24 @@
+/.dockerignore
+# Default ignored files
+/shelf/
+/workspace.xml
+# Rider ignored files
+/modules.xml
+/projectSettingsUpdater.xml
+/.idea.BirdPage.iml
+/contentModel.xml
+# Editor-based HTTP Client requests
+/httpRequests/
+# Datasource local storage ignored files
+/dataSources/
+/dataSources.local.xml
+
+BirdPage/obj/
+BirdPage/bin/
+BirdPage/images/
+.idea/
+
+fly.toml
+
+*.DS_Store
+
