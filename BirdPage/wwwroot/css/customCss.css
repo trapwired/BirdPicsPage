@@ -41,3 +41,16 @@
     max-height: 90%;
     border-radius: 8px;
 }
+
+.form-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* Full viewport height to center vertically */
+}
+
+.demo-form {
+    width: 50%; /* Half the width of the page */
+    max-width: 600px; /* Optional: Set a max width for better responsiveness */
+    min-width: 300px; /* Optional: Set a min width */
+}

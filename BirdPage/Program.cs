@@ -1,5 +1,6 @@
 using BirdPage.Components;
 using BirdPage.Infrastructure;
+using BirdPage.Infrastructure.Email;
 using MudBlazor.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,6 +12,9 @@ builder.Services
 builder.Services.AddMudServices();
 
 builder.Services.AddSingleton<Repository>();
+builder.Services.AddSingleton<EmailService>();
+builder.Services.AddOptions();
+builder.Services.Configure<EmailOptions>(builder.Configuration.GetSection("Email"));
 
 var app = builder.Build();
 

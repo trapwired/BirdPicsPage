@@ -1,0 +1,47 @@
+@page "/Contact"
+@using System.ComponentModel.DataAnnotations
+@using BirdPage.Infrastructure.Email
+<h3>Contact Me</h3>
+<MudPaper Height="400px" Width="100%" Outlined="true">
+    <MudContainer MaxWidth="MaxWidth.Small">
+        <EditForm Model="@model" OnValidSubmit="OnValidSubmit">
+            <DataAnnotationsValidator />
+            <MudCard Class="demo-form">
+                <MudCardContent>
+                    <MudTextField Label="Email" @bind-Value="model.Email" For="@(() => model.Email)" Variant="Variant.Outlined" />
+                    <MudTextField Counter="2048" @bind-Value="model.Message" For="@(() => model.Message)" Label="Your message" Variant="Variant.Outlined" InputType="InputType.Text" Clearable="true" Lines="5"/>
+                </MudCardContent>
+                <MudCardActions>
+                    <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Class="demo-form-button">Contact me</MudButton>
+                </MudCardActions>
+            </MudCard>
+        </EditForm>
+    </MudContainer>
+</MudPaper>
+
+@code {
+    [Inject] private EmailService EmailService { get; set; } = null!;
+    
+    RegisterAccountForm model = new RegisterAccountForm();
+
+    public class RegisterAccountForm
+    {
+
+        [Required]
+        [EmailAddress]
+        public string Email { get; set; }
+
+        [Required]
+        [StringLength(2048, ErrorMessage = "This is too long of a message")]
+        public string Message { get; set; } = "Hi\nI saw your pictures and I want to know more about them...";
+
+    }
+
+    private void OnValidSubmit(EditContext context)
+    {
+        // send email
+        EmailService.SendEmail(model.Email, model.Message);
+        // go back to main page
+    }
+
+}

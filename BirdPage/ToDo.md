@@ -8,3 +8,7 @@
 - change icon
 - fix selection text / display
 - translate select all text 3x
+- translate contact site
+- contact als popup?
+- add viewed bird to contact
+- adjust filter of selected birds - only show applicable
