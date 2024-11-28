@@ -11,8 +11,6 @@ namespace BirdPage.Components.Pages;
 public partial class Home : ComponentBase
 {
     [Inject] private Repository Repository { get; set; } = null!;
-    [Inject] private IJSRuntime JsRuntime { get; set; } = null!;
-    [Inject] private IDialogService DialogService { get; set; } = null!;
     [Inject] private ISnackbar Snackbar { get; set; } = null!;
     [Inject] private EmailService EmailService { get; set; } = null!;
 
@@ -228,6 +226,7 @@ public partial class Home : ComponentBase
     private void SwitchLanguage()
     {
         Language = Language.Next();
+        Snackbar.Add("Language switched:\n" + Language, Severity.Info);
         UpdateDropdowns();
         StateHasChanged();
     }

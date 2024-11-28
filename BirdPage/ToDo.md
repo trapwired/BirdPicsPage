@@ -1,13 +1,10 @@
 - [ ] upload + Tags? auto downscale + watermark
-- [ ] filters
-- on all cards: contact me
 - on all cards: same birds search
 - chips for birds
 - add eichelhäher und andere?
-- add to git
-- change icon
+- change website favicon
 - fix selection text / display
-- translate select all text 3x
-- add viewed bird to contact
-- translate contact site
+- translate everything
+  - select all text 3x
+  - contact site
 - adjust filter of selected birds - only show applicable

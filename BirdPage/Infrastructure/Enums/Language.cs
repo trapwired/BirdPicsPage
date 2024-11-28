@@ -7,7 +7,13 @@ public enum Language
     English
 }
 
-public record LanguageTuple(Language UiLanguage, Language BirdNameLanguage);
+public record LanguageTuple(Language UiLanguage, Language BirdNameLanguage)
+{
+    public override string ToString()
+    {
+        return $"UI: {UiLanguage} / Birds: {BirdNameLanguage}";
+    }
+}
 
 public static class LanguageTuples
 {
