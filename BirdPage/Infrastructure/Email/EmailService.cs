@@ -1,12 +1,13 @@
 using MailKit.Net.Smtp;
 using Microsoft.Extensions.Options;
 using MimeKit;
+using MudBlazor;
 
 namespace BirdPage.Infrastructure.Email;
 
 public class EmailService(IOptions<EmailOptions> options)
 {
-    public Task SendEmail(string email, string message)
+    public async void SendEmail(string email, string message, ISnackbar snackbar)
     {
         var mailMessage = new MimeMessage();
         mailMessage.From.Add(new MailboxAddress(options.Value.SenderName, options.Value.SenderAddress));
@@ -17,12 +18,11 @@ public class EmailService(IOptions<EmailOptions> options)
             Text = message + "\nSent from: " + email
         };
 
-        using var smtpClient = new SmtpClient();
-        smtpClient.Connect(options.Value.SmtpServer, options.Value.SmtpPort, true);
-        smtpClient.Authenticate(options.Value.SenderAddress, options.Value.Password);
-        smtpClient.Send(mailMessage);
-        smtpClient.Disconnect(true);
-        
-        return Task.CompletedTask;
+        var smtpClient = new SmtpClient();
+        await smtpClient.ConnectAsync(options.Value.SmtpServer, options.Value.SmtpPort, true);
+        await smtpClient.AuthenticateAsync(options.Value.SenderAddress, options.Value.Password);
+        await smtpClient.SendAsync(mailMessage);
+        snackbar.Add("Email sent successfully", Severity.Success);
+        await smtpClient.DisconnectAsync(true);
     }
 }

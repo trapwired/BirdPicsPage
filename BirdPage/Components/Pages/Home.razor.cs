@@ -13,6 +13,7 @@ public partial class Home : ComponentBase
     [Inject] private Repository Repository { get; set; } = null!;
     [Inject] private IJSRuntime JsRuntime { get; set; } = null!;
     [Inject] private IDialogService DialogService { get; set; } = null!;
+    [Inject] private ISnackbar Snackbar { get; set; } = null!;
     [Inject] private EmailService EmailService { get; set; } = null!;
 
     private ContactForm contactModel;
@@ -139,10 +140,9 @@ public partial class Home : ComponentBase
     
     private void OnValidSubmit(EditContext context)
     {
-        EmailService.SendEmail(contactModel.Email, contactModel.Message).ConfigureAwait(false);
-        _overlayBigImageVisible = false;
+        EmailService.SendEmail(contactModel.Email, contactModel.Message, Snackbar);
+        _overlayContactVisible = false;
         CurrentBird = null;
-        // TODO display banner that email was sent
     }
 
     private void CancelClicked()

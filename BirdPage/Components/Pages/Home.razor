@@ -15,7 +15,7 @@
                 <div class="image-title">
                     @CurrentBird!.Translate(Language.BirdNameLanguage)
                 </div>
-                <MudButton Variant="Variant.Outlined" Color="Color.Success" Class="centered-button" @onclick="WantImageClicked">
+                <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="centered-button" @onclick="WantImageClicked">
                     I want that image
                 </MudButton>
             </div>
@@ -45,6 +45,7 @@
 </MudOverlay>
 
 <MudFab Style="position:fixed; top:50px;right:50px" Color=@Color.Info StartIcon=@_languageIcon OnClick=@SwitchLanguage/>
+<MudFab Style="position:fixed; bottom:2%; left:50%; transform:translateX(-50%);" Color=@Color.Info StartIcon="@Icons.Material.Filled.Mail" Label="Drop me a message" OnClick="ShowContactOverlay"/>
 
 <MudContainer Class="mt-16 px-8">
     <MudGrid>
