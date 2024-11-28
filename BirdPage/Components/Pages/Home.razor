@@ -7,15 +7,40 @@
 
 <PageTitle>Gallery</PageTitle>
 
-<MudOverlay Visible="@_overlayVisible" Class="fullscreen-overlay">
-    <div class="image-container">
-        <MudImage Src=@CurrentBird.ImgBig Fluid="true" ObjectFit="ObjectFit.Contain" Class="w-full h-full rounded-lg" @onclick="HideOverlay"/>
-        <div class="image-title">
-            @CurrentBird.Translate(Language.BirdNameLanguage)
-        </div>
-        <MudButton Variant="Variant.Filled" Color="Color.Dark" Class="centered-button" @onclick="IWantImageClicked">
-            I want that image
-        </MudButton>
+<MudOverlay Visible="@_overlayBigImageVisible" Class="fullscreen-overlay">
+    <MudCard>
+        <MudCardContent>
+            <div class="image-container">
+                <MudImage Src=@CurrentBird!.ImgBig Fluid="true" ObjectFit="ObjectFit.Contain" Class="w-full h-full rounded-lg" @onclick="() => HideBigPicOverlay()"/>
+                <div class="image-title">
+                    @CurrentBird!.Translate(Language.BirdNameLanguage)
+                </div>
+                <MudButton Variant="Variant.Outlined" Color="Color.Success" Class="centered-button" @onclick="WantImageClicked">
+                    I want that image
+                </MudButton>
+            </div>
+        </MudCardContent>
+    </MudCard>
+</MudOverlay>
+
+<MudOverlay Visible="@_overlayContactVisible" Class="fullscreen-overlay">
+    <div class="contact-form">
+        <EditForm Model="@contactModel" OnValidSubmit="OnValidSubmit">
+            <DataAnnotationsValidator/>
+            <MudCard>
+                <MudCardMedia Image="images/DSC03404.jpg" Height="300"/>
+                <MudCardContent>
+                    <MudTextField Label="Email" @bind-Value="contactModel.Email" For="@(() => contactModel.Email)" Variant="Variant.Outlined" Style="width:100%"/>
+                    <MudTextField Counter="2048" @bind-Value="contactModel.Message" For="@(() => contactModel.Message)" Label="Your message" Variant="Variant.Outlined" InputType="InputType.Text" Clearable="true" Lines="5"/>
+                </MudCardContent>
+                <MudCardActions>
+                    <MudStack Row="true">
+                        <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Class="demo-form-button">Contact me</MudButton>
+                        <MudButton ButtonType="ButtonType.Button" Variant="Variant.Outlined" Color="Color.Primary" Class="demo-form-button" OnClick="CancelClicked">Cancel</MudButton>
+                    </MudStack>
+                </MudCardActions>
+            </MudCard>
+        </EditForm>
     </div>
 </MudOverlay>
 

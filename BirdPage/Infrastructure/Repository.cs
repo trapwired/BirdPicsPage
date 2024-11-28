@@ -124,6 +124,6 @@ public class Repository
 
     public ImmutableArray<Bird> GetAll()
     {
-        return _birds.ToImmutableArray();
+        return _birds.OrderByDescending(bird => bird.Date).ToImmutableArray();
     }
 }

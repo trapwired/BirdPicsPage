@@ -1,7 +1,10 @@
 using BirdPage.Infrastructure;
+using BirdPage.Infrastructure.Email;
 using BirdPage.Infrastructure.Translation;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.JSInterop;
+using MudBlazor;
 
 namespace BirdPage.Components.Pages;
 
@@ -9,10 +12,15 @@ public partial class Home : ComponentBase
 {
     [Inject] private Repository Repository { get; set; } = null!;
     [Inject] private IJSRuntime JsRuntime { get; set; } = null!;
+    [Inject] private IDialogService DialogService { get; set; } = null!;
+    [Inject] private EmailService EmailService { get; set; } = null!;
+
+    private ContactForm contactModel;
 
     private SortingCriteria SortingCriteria { get; set; }
 
-    private bool _overlayVisible;
+    private bool _overlayBigImageVisible;
+    private bool _overlayContactVisible;
     private bool _loading = true;
 
     private IEnumerable<BirdName> _selectedBirdNames { get; set; }
@@ -22,7 +30,7 @@ public partial class Home : ComponentBase
         get => _selectedBirdNames;
         set
         {
-            if (_overlayVisible || _loading)
+            if (_overlayBigImageVisible || _loading)
             {
                 return;
             }
@@ -38,7 +46,7 @@ public partial class Home : ComponentBase
         get => _selectedBirdTags;
         set
         {
-            if (_overlayVisible || _loading)
+            if (_overlayBigImageVisible || _loading)
             {
                 return;
             }
@@ -54,7 +62,7 @@ public partial class Home : ComponentBase
         get => _selectedBirdLocations;
         set
         {
-            if (_overlayVisible || _loading)
+            if (_overlayBigImageVisible || _loading)
             {
                 return;
             }
@@ -81,7 +89,7 @@ public partial class Home : ComponentBase
     private IEnumerable<Bird> FilteredByLocation;
 
     private BirdName? SelectedBirdnameString;
-    public Bird CurrentBird { get; set; }
+    public Bird? CurrentBird { get; set; }
 
     private static string _languageIcon =
         "<svg stroke=\"#FFFFFF\" stroke-width=\"1\" stroke-linecap=\"square\" stroke-linejoin=\"miter\" fill=\"none\" color=\"#000000\"> <title id=\"languageIconTitle\">Language</title> <circle cx=\"12\" cy=\"12\" r=\"10\"/> <path stroke-linecap=\"round\" d=\"M12,22 C14.6666667,19.5757576 16,16.2424242 16,12 C16,7.75757576 14.6666667,4.42424242 12,2 C9.33333333,4.42424242 8,7.75757576 8,12 C8,16.2424242 9.33333333,19.5757576 12,22 Z\"/> <path stroke-linecap=\"round\" d=\"M2.5 9L21.5 9M2.5 15L21.5 15\"/> </svg>";
@@ -107,15 +115,18 @@ public partial class Home : ComponentBase
         FilteredByTags = UiBirds;
         FilteredByLocation = UiBirds;
 
-        CurrentBird = AllBirds.First();
-        _overlayVisible = false;
+        CurrentBird = null;
+        _overlayBigImageVisible = false;
+        _overlayContactVisible = false;
 
         SelectedBirdnameString = null;
+        
+        contactModel = new ContactForm();
     }
 
     private void UpdateDropdowns()
     {
-        if (_overlayVisible)
+        if (_overlayBigImageVisible)
         {
             return;
         }
@@ -124,6 +135,20 @@ public partial class Home : ComponentBase
         birdtags = AllBirds.SelectMany(bird => bird.Tags).ToHashSet().ToArray()
             .OrderBy(bt => bt.Translate(Language.UiLanguage)).ToArray();
         birdlocations = AllBirds.Select(bird => bird.Location).ToHashSet().ToArray().Order().ToArray();
+    }
+    
+    private void OnValidSubmit(EditContext context)
+    {
+        EmailService.SendEmail(contactModel.Email, contactModel.Message).ConfigureAwait(false);
+        _overlayBigImageVisible = false;
+        CurrentBird = null;
+        // TODO display banner that email was sent
+    }
+
+    private void CancelClicked()
+    {
+        _overlayContactVisible = false;
+        CurrentBird = null;
     }
 
     private void UpdateBirdNameFiltering()
@@ -147,7 +172,7 @@ public partial class Home : ComponentBase
 
     private void UpdateAndCombineFiltering()
     {
-        if (_overlayVisible)
+        if (_overlayBigImageVisible)
         {
             return;
         }
@@ -158,7 +183,7 @@ public partial class Home : ComponentBase
 
     private void UpdateSorting()
     {
-        if (_overlayVisible)
+        if (_overlayBigImageVisible)
         {
             return;
         }
@@ -171,7 +196,7 @@ public partial class Home : ComponentBase
                 bird.BirdName.Translate(Language.BirdNameLanguage)),
             SortingCriteria.LocationAZ => UiBirds.OrderBy(bird => bird.Location),
             SortingCriteria.LocationZA => UiBirds.OrderByDescending(bird => bird.Location),
-            _ => UiBirds.OrderBy(bird => bird.Date)
+            _ => UiBirds.OrderByDescending(bird => bird.Date)
         };
 
         StateHasChanged();
@@ -208,23 +233,37 @@ public partial class Home : ComponentBase
     }
     
         
-    private void IWantImageClicked()
+    private void WantImageClicked()
     {
-        Console.WriteLine("I want image clicked");
-        HideOverlay();
+        HideBigPicOverlay(false);
+        ShowContactOverlay();
+    }
+    
+    private void ShowContactOverlay()
+    {
+        _overlayContactVisible = true;
+        if (CurrentBird != null)
+        {
+            contactModel.Message = $"Hi\nI saw your picture of the beautiful {CurrentBird.BirdName.Translate(Language.BirdNameLanguage)} and I want to know more about it...";
+        }
+        StateHasChanged();
     }
 
     private void ShowOverlay(Bird bird)
     {
-        _overlayVisible = true;
+        _overlayBigImageVisible = true;
         CurrentBird = bird;
         StateHasChanged();
     }
 
     [JSInvokable]
-    public void HideOverlay()
+    public void HideBigPicOverlay(bool resetBird = true)
     {
-        _overlayVisible = false;
+        _overlayBigImageVisible = false;
+        if (resetBird)
+        {
+            CurrentBird = null;
+        }
         StateHasChanged();
     }
 

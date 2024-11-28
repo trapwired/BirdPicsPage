@@ -8,7 +8,6 @@
 
     <ItemGroup>
       <Folder Include="images\small\" />
-      <Folder Include="wwwroot\images\" />
     </ItemGroup>
 
     <ItemGroup>
@@ -19,6 +18,10 @@
 
     <ItemGroup>
       <Content Remove="Components\TestDialog.razor" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Include="wwwroot\images\DSC03404.jpg" />
     </ItemGroup>
 
 </Project>

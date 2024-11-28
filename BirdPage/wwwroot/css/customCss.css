@@ -23,6 +23,10 @@
     transform: translateX(-50%);
 }
 
+.contact-form {
+    width: 100vh !important;
+}
+
 .fullscreen-overlay {
     position: fixed;
     top: 0;
@@ -34,12 +38,6 @@
     justify-content: center !important;
     align-items: center !important;
     z-index: 1000; /* Ensure it overlays other content */
-}
-
-.overlay-image {
-    max-width: 90%;
-    max-height: 90%;
-    border-radius: 8px;
 }
 
 .form-container {
