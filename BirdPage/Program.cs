@@ -28,6 +28,14 @@ builder.Services.AddSingleton<EmailService>();
 builder.Services.AddOptions();
 builder.Services.Configure<EmailOptions>(builder.Configuration.GetSection("Email"));
 
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddLocalization();
+string[] supportedCultures = ["en", "de", "en-US", "de-DE"];
+var localizationOptions = new RequestLocalizationOptions()
+    .SetDefaultCulture(supportedCultures[0])
+    .AddSupportedCultures(supportedCultures)
+    .AddSupportedUICultures(supportedCultures);
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -38,6 +46,7 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
+app.UseRequestLocalization(localizationOptions);
 app.UseHttpsRedirection();
 
 app.UseStaticFiles();

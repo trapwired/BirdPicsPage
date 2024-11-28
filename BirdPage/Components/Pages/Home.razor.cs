@@ -1,3 +1,4 @@
+using System.Globalization;
 using BirdPage.Infrastructure;
 using BirdPage.Infrastructure.Email;
 using BirdPage.Infrastructure.Translation;
@@ -13,6 +14,7 @@ public partial class Home : ComponentBase
     [Inject] private Repository Repository { get; set; } = null!;
     [Inject] private ISnackbar Snackbar { get; set; } = null!;
     [Inject] private EmailService EmailService { get; set; } = null!;
+    [Inject] private IHttpContextAccessor httpContextAccessor { get; set; } = null!;
 
     private ContactForm contactModel;
 
@@ -78,7 +80,7 @@ public partial class Home : ComponentBase
     private BirdTag[] birdtags = [];
     private string[] birdlocations = [];
 
-    private LanguageTuple Language = LanguageTuples.GermanGerman;
+    private LanguageTuple Language;
 
     private IEnumerable<Bird> UiBirds;
     private IEnumerable<Bird> AllBirds;
@@ -121,6 +123,25 @@ public partial class Home : ComponentBase
         SelectedBirdnameString = null;
         
         contactModel = new ContactForm();
+
+        Language = GetLanguageFromContext();
+    }
+
+    private LanguageTuple GetLanguageFromContext()
+    {
+        var language = LanguageTuples.EnglishEnglish;
+        var httpContext = httpContextAccessor.HttpContext;
+        if (httpContext != null)
+        {
+            var cultureInfo = CultureInfo.CurrentCulture;
+            language = cultureInfo.Name switch
+            {
+                "de" or "de-DE" => LanguageTuples.GermanGerman,
+                "en-US" or "en" => LanguageTuples.EnglishEnglish,
+            };
+        }
+
+        return language;
     }
 
     private void UpdateDropdowns()
